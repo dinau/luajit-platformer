@@ -6,10 +6,18 @@ Writing a 2D Platform Game in LuaJIT with SDL2.
 
 This repository has been inherited from [nim-platformer](https://github.com/def-/nim-platformer) project.
 
-#### Install 
+
+![alt](img/t4.png)
+
+#### Support OS
 
 ---
 
+Windows10 
+
+#### Install 
+
+---
 
 ```sh
 git clone --recursive https://github.com/dinau/luajit-platformer
@@ -21,10 +29,10 @@ r.bat 4          --- Example, execute platformer_part4.lua
 
 ---
 
-platformer_part1.lua  
-platformer_part2.lua  
-platformer_part3.lua  
-platformer_part4.lua  
+[platformer_part1.lua](tutorial/platformer_part1.lua)  
+[platformer_part2.lua](tutorial/platformer_part2.lua)  
+[platformer_part3.lua](tutorial/platformer_part3.lua)  
+[platformer_part4.lua](tutorial/platformer_part4.lua)  
 
 **In progress**  
 ~~platformer_part5.lua  
@@ -32,3 +40,14 @@ platformer_part6.lua
 platformer_part7.lua  
 platformer_part8.lua  
 platformer_part9.lua~~
+
+#### Reference
+
+---
+
+- SDL2.dll  
+https://github.com/libsdl-org/SDL/releases/
+- SDL2_image.dll  
+https://github.com/libsdl-org/SDL_image/releases
+- LuaJIT-SDL2  
+https://github.com/sonoro1234/LuaJIT-SDL2
