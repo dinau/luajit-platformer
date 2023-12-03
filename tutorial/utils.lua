@@ -9,6 +9,9 @@ function sdlFailIf(cond,reason)
   end
 end
 
+function boolToInt(b)
+  if b then return 1 else return 0 end
+end
 
 --https://stackoverflow.com/questions/72386387/lua-split-string-to-table
 function string:split(sep)
@@ -18,4 +21,8 @@ function string:split(sep)
    local i = 1
    self:gsub(pattern, function (c) result[i] = c i = i + 1 end)
    return result
+end
+
+function clamp(x,a,b)
+  return math.max(a,math.min(b,x))
 end
