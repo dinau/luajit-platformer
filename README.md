@@ -51,10 +51,10 @@ r.bat 5          --- Example, execute platformer_part5.lua
 [platformer_part3.lua](tutorial/platformer_part3.lua)  
 [platformer_part4.lua](tutorial/platformer_part4.lua)  
 [platformer_part5.lua](tutorial/platformer_part5.lua) (2023/12) It can move a item with key input.  
+[platformer_part6.lua](tutorial/platformer_part6.lua)  
 
 - In progress  
-~~platformer_part6.lua  
-platformer_part7.lua  
+~~platformer_part7.lua  
 platformer_part8.lua  
 platformer_part9.lua~~
 
