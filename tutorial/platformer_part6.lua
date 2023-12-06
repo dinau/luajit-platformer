@@ -157,9 +157,12 @@ end
 -----------
 function toInput(key)
   if     key == sdl.SCANCODE_A     then return Input.left
+  elseif key == sdl.SCANCODE_H     then return Input.left
   elseif key == sdl.SCANCODE_D     then return Input.right
-  elseif key == sdl.SCANCODE_SPACE then
-    return Input.jump
+  elseif key == sdl.SCANCODE_L     then return Input.right
+  elseif key == sdl.SCANCODE_SPACE then return Input.jump
+  elseif key == sdl.SCANCODE_J     then return Input.jump
+  elseif key == sdl.SCANCODE_K     then return Input.jump
   elseif key == sdl.SCANCODE_R     then return Input.restart
   elseif key == sdl.SCANCODE_Q     then return Input.quit
   else return Input.none end
@@ -346,24 +349,21 @@ end
 ---------
 function main()
   if sdlFailIf(0 == sdl.init(sdl.INIT_VIDEO + sdl.INIT_TIMER + sdl.INIT_EVENTS),
-    "SDL2 initialization failed") then
-    return -1
-  end
+    "SDL2 initialization failed") then os.exit(1) end
   if sdlFailIf(sdl.TRUE == sdl.SetHint("SDL_RENDER_SCALE_QUALITY", "2"),
-     "Linear texture filtering could not be enabled") then return -1
-  end
+     "Linear texture filtering could not be enabled") then os.exit(1) end
 
   local imgFlags = img.INIT_PNG
-  sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed")
+  if sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
 
   local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
       windowSize.x, windowSize.y, sdl.WINDOW_SHOWN)
-  if sdlFailIf(0 ~= window,"Window could not be created") then return -1 end
+  if sdlFailIf(0 ~= window,"Window could not be created") then os.exit(1) end
 
   local renderer = sdl.CreateRenderer(window,-1,
     sdl.RENDERER_ACCELERATED or sdl.RENDERER_PRESENTVSYNC)
-  if sdlFailIf(0 ~= renderer,"Renderer could not be created") then return -1 end
+  if sdlFailIf(0 ~= renderer,"Renderer could not be created") then os.exit(1) end
 
   sdl.SetRenderDrawColor(renderer,110,132,174,255)
 
@@ -393,8 +393,8 @@ function main()
   --------------
   sdl.DestroyRenderer(renderer)
   sdl.DestroyWindow(window)
-  img.quit()
-  sdl.quit()
+  img.Quit()
+  sdl.Quit()
 end
 
 ---------

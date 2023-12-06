@@ -1,3 +1,4 @@
+local sdl = require"sdl2_ffi"
 
 function dprint(...)
   if Debug then print(...) end
@@ -5,8 +6,9 @@ end
 
 function sdlFailIf(cond,reason)
   if not cond then
-    print(string.format("Error: %s :: %s\n", sdl.getError(),reason))
+    print(string.format("Error: (%s) :: %s\n", sdl.getError()[1],reason))
   end
+  return not cond
 end
 
 function boolToInt(b)
