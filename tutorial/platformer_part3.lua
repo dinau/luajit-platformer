@@ -8,17 +8,14 @@ Debug = true
 --local r = ffi.new("SDL_Rect",{0,1,2,3})
 --dprint(r.x,r.y,r.w,r.h)
 ----------------------------------------
-
-local Input = {none = 0,left = 1, right = 2, jump = 3 , restart = 4, quit = 5}
---local Player = {texture = {},
---                pos = {},
---                vel = {}
---               }
-local Game = { renderer = {},
-               inputs   = {false,false,false, false,false,false},
-               player   = {}, -- Player type
-               camera   = ffi.new("SDL_Point",{0,0})
-             }
+local Input  = {none = 0,left = 1, right = 2, jump = 3 , restart = 4, quit = 5}
+local Player = {}
+local Game   = {}
+--      { renderer = {},
+--       inputs   = {false,false,false, false,false,false},
+--       player   = {texture = nil, pos = {x=0,y=0}, vel = {x=0,y=0} },-- Player type
+--       camera   = ffi.new("SDL_Point",{0,0})
+--     }
 
 --------------
 --- renderTee
@@ -54,33 +51,43 @@ end
 ------------------
 --- restartPlayer
 ------------------
-function restartPlayer(player)
-  player.pos = ffi.new("SDL_Point",{170, 500})
-  player.vel = ffi.new("SDL_FPoint",{0, 0})
+function Player:restartPlayer()
+  return
+    {x = 170, y = 500},  -- pos
+    {x = 0  , y = 0}     -- vel
 end
 
--------------
---- newPlayer
--------------
-function newPlayer(texture) -- :Player type
-  local player = {}
-  restartPlayer(player)
-  player.texture = texture
-  return player
+--------------
+--- newPlayer   -- Player type
+--------------
+function Player.newPlayer(texture)
+  local ps, vl = Player.restartPlayer()
+  return {
+    texture = texture,
+    restartPlayer = Player.restartPlayer,
+    pos = ps,
+    vel = vl
+  }
+end
+
+------------
+--- newGame   -- Game type
+------------
+function Game.newGame(renderer)
+  return {
+    renderer    = renderer,
+    inputs      = {false,false,false, false,false,false},
+    player      = Player.newPlayer(img.LoadTexture(renderer,"player.png")),
+    camera      = ffi.new("SDL_Point",{0,0}),
+    -- method
+    handleInput = Game.handleInput,
+    render      = Game.render,
+  }
 end
 
 -----------
--- newGame
------------
-function newGame(renderer)
-  Game.renderer = renderer
-  Game.player = newPlayer(img.LoadTexture(renderer,"player.png"))
-  return Game
-end
-
---------------------
 -- toInput
---------------------
+-----------
 function toInput(key)
   if key == sdl.SCANCODE_A         then
     dprint("LEFT")
@@ -122,21 +129,20 @@ function Game:handleInput()
   end
 end
 
----------------
+----------------
 --- Game:render
----------------
+----------------
 function Game:render()
    sdl.RenderClear(self.renderer)
-   local p = {}
-   p.x = self.player.pos.x - self.camera.x
-   p.y = self.player.pos.y - self.camera.y
+   local p = { x = self.player.pos.x - self.camera.x
+             , y = self.player.pos.y - self.camera.y}
    renderTee(self.renderer, self.player.texture, p)
    sdl.RenderPresent(self.renderer)
 end
 
---------
+---------
 --- main
---------
+---------
 function main()
   if sdlFailIf(0 == sdl.init(sdl.INIT_VIDEO + sdl.INIT_TIMER + sdl.INIT_EVENTS),
     "SDL2 initialization failed") then
@@ -146,7 +152,10 @@ function main()
      "Linear texture filtering could not be enabled") then return -1
   end
 
-  local window = sdl.CreateWindow("Our own 2D platformer",
+  local imgFlags = img.INIT_PNG
+  sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed")
+
+  local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
       1280, 720, sdl.WINDOW_SHOWN)
   if sdlFailIf(0 ~= window,"Window could not be created") then return -1 end
@@ -156,11 +165,13 @@ function main()
   if sdlFailIf(0 ~= renderer,"Renderer could not be created") then return -1 end
 
   sdl.SetRenderDrawColor(renderer,110,132,174,255)
-  game = newGame(renderer)
+
+  local game = Game.newGame(renderer)
 
   --------------
   --- Main loop
   --------------
+  -- Game loop, draws each frame
   while not game.inputs[Input.quit] do
     game:handleInput()
     game:render()
@@ -171,6 +182,7 @@ function main()
   --------------
   sdl.DestroyRenderer(renderer)
   sdl.DestroyWindow(window)
+  img.quit()
   sdl.quit()
 end
 

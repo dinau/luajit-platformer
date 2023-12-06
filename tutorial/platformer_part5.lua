@@ -11,11 +11,11 @@ Debug = true
 --local r = ffi.new("SDL_Rect",{0,1,2,3})
 --dprint(r.x,r.y,r.w,r.h)
 ----------------------------------------
-local Input = {none = 0,left = 1, right = 2, jump = 3 , restart = 4, quit = 5}
+local Input     = {none = 0,left = 1, right = 2, jump = 3 , restart = 4, quit = 5}
 local Collision = {x = 0, y = 1, corner = 2}
-local Player = {}
-local Map = {}
-local Game = {}
+local Player    = {}
+local Map       = {}
+local Game      = {}
 --      { renderer = {},
 --       inputs   = {false,false,false, false,false,false},
 --       player   = {texture = nil, pos = {x=0,y=0}, vel = {x=0,y=0} },-- Player type
@@ -23,12 +23,11 @@ local Game = {}
 --       camera   = ffi.new("SDL_Point",{0,0})
 --     }
 local tilesPerRow = 16
-local tileSize = {x = 64,y = 64}
+local tileSize    = {x = 64, y = 64}
+local playerSize  = {x = 64, y = 64}
 
-local playerSize = {x = 64, y = 64}
-
-local air = 0
-local start = 78
+local air    =   0
+local start  =  78
 local finish = 110
 
 --------------
@@ -180,9 +179,9 @@ function Game:handleInput()
   end
 end
 
----------------
+----------------
 --- Game:render
----------------
+----------------
 function Game:render()
    sdl.RenderClear(self.renderer)
    local p = { x = self.player.pos.x - self.camera.x
@@ -368,9 +367,9 @@ function main()
     game:render()
   end
 
-  -------------
-  --- End proc
-  -------------
+  --------------
+  --- End procs
+  --------------
   sdl.DestroyRenderer(renderer)
   sdl.DestroyWindow(window)
   img.quit()
