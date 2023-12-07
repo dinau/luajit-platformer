@@ -1,3 +1,6 @@
 [submodule "luajit-sdl2_image"]
 	path = luajit-sdl2_image
 	url = https://github.com/dinau/luajit-sdl2_image
+[submodule "luajit-sdl2_ttf"]
+	path = luajit-sdl2_ttf
+	url = https://github.com/dinau/luajit-sdl2_ttf

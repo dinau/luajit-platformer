@@ -2,6 +2,7 @@ local ffi = require"ffi"
 --- SDL/image header
 local sdl = require"sdl2_ffi"
 local img = require"sdl2_image"
+local ttf = require"sdl2_ttf"
 ffi.cdef[[
 unsigned long GetTickCount();
 ]]
@@ -86,6 +87,32 @@ function renderMap(renderer,map, camera)
 end
 
 ------------------
+--- renderTextSub
+------------------
+function renderTextSub(renderer, font, text, x, y, outline, color)
+  ttf.SetFontOutline(font,outline)
+  local surface = ttf.RenderUTF8_Blended(font, text, color)
+  if sdlFailIf(nil ~= surface,"Could not render text surface") then os.eixt(1) end
+  sdl.SetSurfaceAlphaMod(surface, color.a)
+  local source = ffi.new("SDL_Rect",{0, 0, surface.w, surface.h})
+  local dest   = ffi.new("SDL_Rect",{x - outline, y - outline, surface.w, surface.h})
+  local texture = sdl.CreateTextureFromSurface(renderer,surface)
+  if sdlFailIf(nil ~= texture,"Could not create texture from rendered text") then os.eixt(1) end
+  sdl.FreeSurface(surface)
+  sdl.RenderCopyEx(renderer, texture, source, dest, 0.0, nil, sdl.FLIP_NONE)
+  sdl.DestroyTexture(texture)
+end
+
+---------------
+--- renderText
+---------------
+function Game:renderText(text, x, y, color)
+  local outlineColor = ffi.new("SDL_Color",{0, 0, 0, 0x8f})
+  renderTextSub(self.renderer, self.font, text, x, y, 2, outlineColor)
+  renderTextSub(self.renderer, self.font, text, x, y, 0, color)
+end
+
+------------------
 --- restartPlayer
 ------------------
 function Player:restartPlayer()
@@ -106,6 +133,7 @@ function Time.newTime()
     best    = -1
   }
 end
+
 --------------
 --- newPlayer   -- Player type
 --------------
@@ -151,19 +179,24 @@ end
 --- newGame   -- Game type
 ------------
 function Game.newGame(renderer)
+  local fontName = "DejaVuSans.ttf"
+  local f = ttf.OpenFont(fontName, 28)
+  if sdlFailIf(f ~= nil,"Font Load: " .. fontName) then os.exit(1) end
   return {
     renderer    = renderer,
     inputs      = {false,false,false, false,false,false},
     player      = Player.newPlayer(img.LoadTexture(renderer,"player.png")),
     map         = Map.newMap(img.LoadTexture(renderer,"grass.png"),"default.map"),
     camera      = ffi.new("SDL_Point",{0,0}),
+    font        = f,
     -- method
     handleInput = Game.handleInput,
     render      = Game.render,
     moveBox     = Game.moveBox,
     physics     = Game.physics,
     moveCamera  = Game.moveCamera,
-    logic       = Game.logic
+    logic       = Game.logic,
+    renderText  = Game.renderText
   }
 end
 
@@ -203,13 +236,28 @@ end
 ----------------
 --- Game:render
 ----------------
-function Game:render()
-   sdl.RenderClear(self.renderer)
-   local p = { x = self.player.pos.x - self.camera.x
-             , y = self.player.pos.y - self.camera.y}
-   renderTee(self.renderer, self.player.texture, p)
-   renderMap(self.renderer, self.map, self.camera)
-   sdl.RenderPresent(self.renderer)
+function Game:render(tick)
+  -- Draw over all drawings of the last frame with the default color
+  sdl.RenderClear(self.renderer)
+  -- Actual drawing here
+  local p = { x = self.player.pos.x - self.camera.x
+            , y = self.player.pos.y - self.camera.y}
+  renderTee(self.renderer, self.player.texture, p)
+  renderMap(self.renderer, self.map, self.camera)
+
+  local time = self.player.time
+  local white = ffi.new("SDL_Color",{0xff, 0xff, 0xff, 0xff})
+  if time.begin >= 0 then
+    self:renderText(formatTime(tick - time.begin), 50, 100, white)
+  elseif time.finish >= 0 then
+    self:renderText("Finished in: " .. formatTime(time.finish), 50, 100, white)
+  end
+  if time.best >= 0 then
+    self:renderText("Best time: " .. formatTime(time.best), 50, 150, white)
+  end
+
+  -- Show the result on screen
+  sdl.RenderPresent(self.renderer)
 end
 
 ------------
@@ -371,10 +419,10 @@ end
 --- formatTime
 ---------------
 function formatTime(ticks)
-  local mins  = math.ceil(math.ceil(ticks / 50) / 60)
+  local mins  = math.floor(math.floor(ticks / 50) / 60)
   local secs  = math.ceil(ticks / 50) % 60
   local cents = math.ceil(ticks % 50) * 2
-  return string.format("mins:%02d:secs:%02d}:cents:%02d",min,secs,cents)
+  return string.format("%02d:%02d:%02d",mins,secs,cents)
 end
 
 ----------
@@ -409,6 +457,7 @@ function main()
 
   local imgFlags = img.INIT_PNG
   if sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
+  if sdlFailIf(0 == ttf.Init(), "SDL2_tff font driver initialization failed") then os.exit(1) end
 
   local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
@@ -440,7 +489,7 @@ function main()
     end
     lastTick = newTick
 
-    game:render()
+    game:render(lastTick)
   end
 
   --------------
@@ -448,6 +497,7 @@ function main()
   --------------
   sdl.DestroyRenderer(renderer)
   sdl.DestroyWindow(window)
+  ttf.Quit()
   img.Quit()
   sdl.Quit()
 end
