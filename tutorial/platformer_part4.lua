@@ -203,7 +203,6 @@ function Game:render()
    sdl.RenderPresent(self.renderer)
 end
 
---------
 ---------
 --- main
 ---------

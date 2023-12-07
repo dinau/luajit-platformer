@@ -106,6 +106,7 @@ function Time.newTime()
     best    = -1
   }
 end
+
 --------------
 --- newPlayer   -- Player type
 --------------

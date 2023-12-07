@@ -56,7 +56,7 @@ r.bat 5          --- Example, execute platformer_part5.lua
 [platformer_part8.lua](tutorial/platformer_part8.lua)  
 
 - In progress  
-~~platformer_part9.lua~~
+platformer_part9.lua
 
 #### Reference
 
@@ -66,5 +66,7 @@ r.bat 5          --- Example, execute platformer_part5.lua
 https://github.com/libsdl-org/SDL/releases/
 - SDL2_image.dll  
 https://github.com/libsdl-org/SDL_image/releases
+- SDL2_ttf.dll  
+https://github.com/libsdl-org/SDL_ttf/release
 - LuaJIT-SDL2  
 https://github.com/sonoro1234/LuaJIT-SDL2
