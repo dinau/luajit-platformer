@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [luajit-platformer](#luajit-platformer)
+  - [Support OS](#support-os)
+  - [Install and run](#install-and-run)
+  - [Tutorial](#tutorial)
+  - [Reference](#reference)
+  - [Tool versions](#tool-versions)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ### luajit-platformer
 
 ---
@@ -63,10 +75,22 @@ platformer_part9.lua
 ---
 
 - SDL2.dll  
-https://github.com/libsdl-org/SDL/releases/
+https://github.com/libsdl-org/SDL/releases/tag/release-2.28.5
 - SDL2_image.dll  
-https://github.com/libsdl-org/SDL_image/releases
+https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.3
 - SDL2_ttf.dll  
-https://github.com/libsdl-org/SDL_ttf/release
+https://github.com/libsdl-org/SDL_ttf/releases/tag/release-2.20.2
 - LuaJIT-SDL2  
 https://github.com/sonoro1234/LuaJIT-SDL2
+
+
+#### Tool versions
+
+---
+
+- LuaJIT 2.1.1697887905 -- Copyright (C) 2005-2023 Mike Pall.
+- SDL2 v2.28.5
+- SDL2_image v2.6.3
+- SDL2_ttf v2.20.2
+- gcc.exe (Rev2, Built by MSYS2 project) 13.2.0
+- nim-1.6.14 
