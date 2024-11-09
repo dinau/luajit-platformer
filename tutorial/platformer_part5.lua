@@ -6,7 +6,7 @@ ffi.cdef[[
 unsigned long GetTickCount();
 ]]
 ----------------------------------------
-require"utils"
+local utils = require"utils"
 Debug = true
 --local r = ffi.new("SDL_Rect",{0,1,2,3})
 --dprint(r.x,r.y,r.w,r.h)
@@ -152,7 +152,7 @@ end
 -----------
 -- toInput
 -----------
-function toInput(key)
+local toInput = function (key)
   if     key == sdl.SCANCODE_A     then return Input.left
   elseif key == sdl.SCANCODE_H     then return Input.left
   elseif key == sdl.SCANCODE_D     then return Input.right
@@ -198,8 +198,8 @@ end
 --- getTile
 ------------
 function getTile(map, x, y)
-  local nx = clamp(math.floor(x / tileSize.x), 0, map.width - 1)
-  local ny = clamp(math.floor(y / tileSize.y), 0, map.height - 1)
+  local nx = utils.clamp(math.floor(x / tileSize.x), 0, map.width - 1)
+  local ny = utils.clamp(math.floor(y / tileSize.y), 0, map.height - 1)
   local pos = math.ceil(ny * map.width + nx)
   return map.tiles[pos+1]
 end
@@ -309,8 +309,8 @@ function Game:physics()
       self.player.vel.y = -21
     end
   end
-  local direction = boolToInt(self.inputs[Input.right]) -
-                    boolToInt(self.inputs[Input.left])
+  local direction = utils.boolToInt(self.inputs[Input.right]) -
+                    utils.boolToInt(self.inputs[Input.left])
   -- direction is [0 or 1 or -1]
 
   self.player.vel.y = self.player.vel.y + 0.75
@@ -319,7 +319,7 @@ function Game:physics()
   else
     self.player.vel.x = 0.95 * self.player.vel.x + 2.0 * direction
   end
-  self.player.vel.x = clamp(self.player.vel.x, -8, 8)
+  self.player.vel.x = utils.clamp(self.player.vel.x, -8, 8)
 
   self:moveBox(self.map, playerSize)
 end
@@ -327,23 +327,23 @@ end
 ---------
 --- main
 ---------
-function main()
-  if sdlFailIf(0 == sdl.init(sdl.INIT_VIDEO + sdl.INIT_TIMER + sdl.INIT_EVENTS),
+local main = function()
+  if utils.sdlFailIf(0 == sdl.init(sdl.INIT_VIDEO + sdl.INIT_TIMER + sdl.INIT_EVENTS),
     "SDL2 initialization failed") then os.exit(1) end
-  if sdlFailIf(sdl.TRUE == sdl.SetHint("SDL_RENDER_SCALE_QUALITY", "2"),
+  if utils.sdlFailIf(sdl.TRUE == sdl.SetHint("SDL_RENDER_SCALE_QUALITY", "2"),
      "Linear texture filtering could not be enabled") then os.exit(1) end
 
   local imgFlags = img.INIT_PNG
-  if sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
+  if utils.sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
 
   local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
       1280, 720, sdl.WINDOW_SHOWN)
-  if sdlFailIf(0 ~= window,"Window could not be created") then os.exit(1) end
+  if utils.sdlFailIf(0 ~= window,"Window could not be created") then os.exit(1) end
 
   local renderer = sdl.CreateRenderer(window,-1,
     sdl.RENDERER_ACCELERATED or sdl.RENDERER_PRESENTVSYNC)
-  if sdlFailIf(0 ~= renderer,"Renderer could not be created") then os.exit(1) end
+  if utils.sdlFailIf(0 ~= renderer,"Renderer could not be created") then os.exit(1) end
 
   sdl.SetRenderDrawColor(renderer,110,132,174,255)
 

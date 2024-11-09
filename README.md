@@ -17,12 +17,10 @@
 Writing a 2D Platform Game in LuaJIT with SDL2.
 
 This repository has been inherited from  
-- Github - Source code  
-[nim-platformer](https://github.com/def-/nim-platformer) project.
-- English  
-https://hookrace.net/blog/writing-a-2d-platform-game-in-nim-with-sdl2/  
-- Japanese  
-https://postd.cc/writing-a-2d-platform-game-in-nim-with-sdl2/  
+- [nim-platformer](https://github.com/def-/nim-platformer) project.
+   - Document  
+   English:  https://hookrace.net/blog/writing-a-2d-platform-game-in-nim-with-sdl2/  
+   Japanese: https://postd.cc/writing-a-2d-platform-game-in-nim-with-sdl2/  
 
 
 ![alt](img/t4.png)
@@ -31,7 +29,7 @@ https://postd.cc/writing-a-2d-platform-game-in-nim-with-sdl2/
 
 ---
 
-Windows10 
+Windows10 or later
 
 #### Install and run
 

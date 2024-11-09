@@ -1,17 +1,18 @@
 local sdl = require"sdl2_ffi"
+local M = {}
 
-function dprint(...)
+function M.dprint(...)
   if Debug then print(...) end
 end
 
-function sdlFailIf(cond,reason)
+function M.sdlFailIf(cond,reason)
   if not cond then
     print(string.format("Error: (%s) :: %s\n", sdl.getError()[1],reason))
   end
   return not cond
 end
 
-function boolToInt(b)
+function M.boolToInt(b)
   if b then return 1 else return 0 end
 end
 
@@ -25,6 +26,8 @@ function string:split(sep)
    return result
 end
 
-function clamp(x,a,b)
+function M.clamp(x,a,b)
   return math.max(a,math.min(b,x))
 end
+
+return M

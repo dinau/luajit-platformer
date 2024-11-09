@@ -1,4 +1,5 @@
-*.nim
+nim/
+tutorial/utils/
 # Compiled Lua sources
 luac.out
 
