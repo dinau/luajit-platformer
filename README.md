@@ -3,10 +3,11 @@
 
 - [luajit-platformer](#luajit-platformer)
   - [Support OS](#support-os)
-  - [Install and run](#install-and-run)
-  - [Tutorial](#tutorial)
+  - [Download](#download)
+  - [Run Tutorials](#run-tutorials)
+  - [Install and run from sources](#install-and-run-from-sources)
   - [Reference](#reference)
-  - [Tool versions](#tool-versions)
+  - [Tools version](#tools-version)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -31,7 +32,60 @@ This repository has been inherited from
 
 Windows10 or later
 
-#### Install and run
+
+#### Download
+
+---
+- Windows 64bit version  
+2024/11: [luajit-platformer-0.9.0.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.9.0.zip)
+
+- Last Windows 32bit version  
+2024/11: [luajit-platformer-0.8.4.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.8.4.zip)
+
+#### Run Tutorials
+
+---
+
+1. Unzip downloaded file
+1. On MS-DOS command line, 
+
+   ```sh
+   cd luajit-paltformer-0.9.0 
+   cd tutorial
+   r.bat           # Execute platformer_part8.lua
+   ```
+   
+   Execute another tutorial,
+
+   ```sh
+   r.bat 5          # For instance execute platformer_part5.lua
+   ```
+
+- Key operation  
+
+   | Key            | function |
+   | :---:          | :---     |
+   | Up,Space, J, K | Jump     |
+   | Left, A, H     | Left     |
+   | Right, D, L    | Right    |
+   | R              | Restart  |
+   | Q              | Quit     |
+
+- Tutorial sources  
+[platformer_part1.lua](tutorial/platformer_part1.lua)  
+[platformer_part2.lua](tutorial/platformer_part2.lua)  
+[platformer_part3.lua](tutorial/platformer_part3.lua)  
+[platformer_part4.lua](tutorial/platformer_part4.lua)  
+[platformer_part5.lua](tutorial/platformer_part5.lua) (2023/12) From here it can move the item with key operation.  
+[platformer_part6.lua](tutorial/platformer_part6.lua)  
+[platformer_part7.lua](tutorial/platformer_part7.lua)  
+[platformer_part8.lua](tutorial/platformer_part8.lua)  
+
+- In progress TODO  
+platformer_part9.lua
+
+
+#### Install and run from sources
 
 ---
 
@@ -40,33 +94,6 @@ git clone --recursive https://github.com/dinau/luajit-platformer
 cd tutorial
 r.bat 5          --- Example, execute platformer_part5.lua
 ```
-
-#### Tutorial
-
----
-
-- Key operation 
-
-   | Key         | function |
-   | :---:       | :---     |
-   | Space, J, K | Jump     |
-   | A, H        | Left     |
-   | D, L        | Right    |
-   | R           | Restart  |
-   | Q           | Quit     |
-
-- Sources  
-[platformer_part1.lua](tutorial/platformer_part1.lua)  
-[platformer_part2.lua](tutorial/platformer_part2.lua)  
-[platformer_part3.lua](tutorial/platformer_part3.lua)  
-[platformer_part4.lua](tutorial/platformer_part4.lua)  
-[platformer_part5.lua](tutorial/platformer_part5.lua) (2023/12) It can move an item with key input.  
-[platformer_part6.lua](tutorial/platformer_part6.lua)  
-[platformer_part7.lua](tutorial/platformer_part7.lua)  
-[platformer_part8.lua](tutorial/platformer_part8.lua)  
-
-- In progress  
-platformer_part9.lua
 
 #### Reference
 
@@ -82,7 +109,7 @@ https://github.com/libsdl-org/SDL_ttf/releases/tag/release-2.20.2
 https://github.com/sonoro1234/LuaJIT-SDL2
 
 
-#### Tool versions
+#### Tools version
 
 ---
 
@@ -91,4 +118,3 @@ https://github.com/sonoro1234/LuaJIT-SDL2
 - SDL2_image v2.6.3
 - SDL2_ttf v2.20.2
 - gcc.exe (Rev2, Built by MSYS2 project) 13.2.0
-- nim-1.6.14 
