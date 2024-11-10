@@ -172,11 +172,12 @@ end
 -- toInput
 -----------
 local toInput = function (key)
-  if     key == sdl.SCANCODE_A     then return Input.left
-  elseif key == sdl.SCANCODE_H     then return Input.left
-  elseif key == sdl.SCANCODE_D     then return Input.right
-  elseif key == sdl.SCANCODE_L     then return Input.right
-  elseif key == sdl.SCANCODE_SPACE then return Input.jump
+  if     key == sdl.SCANCODE_A or key == sdl.SCANCODE_H or key == sdl.SCANCODE_LEFT then
+    return Input.left
+  elseif key == sdl.SCANCODE_D or key == sdl.SCANCODE_L or key == sdl.SCANCODE_RIGHT then
+    return Input.right
+  elseif key == sdl.SCANCODE_SPACE or key == sdl.SCANCODE_UP  then
+    return Input.jump
   elseif key == sdl.SCANCODE_J     then return Input.jump
   elseif key == sdl.SCANCODE_K     then return Input.jump
   elseif key == sdl.SCANCODE_R     then return Input.restart
