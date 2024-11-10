@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [luajit-platformer](#luajit-platformer)
+- [LuaJIT-Platformer](#luajit-platformer)
   - [Support OS](#support-os)
   - [Download](#download)
   - [Run Tutorials](#run-tutorials)
@@ -11,7 +11,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### luajit-platformer
+### LuaJIT-Platformer
 
 ---
 
@@ -36,7 +36,7 @@ Windows10 or later
 #### Download
 
 ---
-- Windows 64bit version  
+- Windows 64bit version WIP  
 2024/11: [luajit-platformer-0.9.0.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.9.0.zip)
 
 - Last Windows 32bit version  
@@ -52,13 +52,7 @@ Windows10 or later
    ```sh
    cd luajit-paltformer-0.9.0 
    cd tutorial
-   r.bat           # Execute platformer_part8.lua
-   ```
-   
-   Execute another tutorial,
-
-   ```sh
-   r.bat 5          # For instance execute platformer_part5.lua
+   platformer_part5.bat      # For instance execute platformer_part5.lua
    ```
 
 - Key operation  
@@ -92,7 +86,7 @@ platformer_part9.lua
 ```sh
 git clone --recursive https://github.com/dinau/luajit-platformer
 cd tutorial
-r.bat 5          --- Example, execute platformer_part5.lua
+... same above
 ```
 
 #### Reference
