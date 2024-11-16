@@ -17,6 +17,7 @@ local Game   = {}
 --       camera   = ffi.new("SDL_Point",{0,0})
 --     }
 
+local windowSize = {x = 1280, y = 720}
 --------------
 --- renderTee
 --------------
@@ -51,7 +52,7 @@ end
 ------------------
 --- restartPlayer
 ------------------
-function Player:restartPlayer()
+local restartPlayer = function()
   return
     {x = 170, y = 500},  -- pos
     {x = 0  , y = 0}     -- vel
@@ -60,13 +61,12 @@ end
 --------------
 --- newPlayer   -- Player type
 --------------
-function Player.newPlayer(texture)
-  local ps, vl = Player.restartPlayer()
+function newPlayer(texture)
+  local pos, vel = restartPlayer()
   return {
     texture = texture,
-    restartPlayer = Player.restartPlayer,
-    pos = ps,
-    vel = vl
+    pos     = pos,
+    vel     = vel,
   }
 end
 
@@ -77,7 +77,7 @@ function Game.newGame(renderer)
   return {
     renderer    = renderer,
     inputs      = {false,false,false, false,false,false},
-    player      = Player.newPlayer(img.LoadTexture(renderer,"player.png")),
+    player      = newPlayer(img.LoadTexture(renderer,"player.png")),
     camera      = ffi.new("SDL_Point",{0,0}),
     -- method
     handleInput = Game.handleInput,
@@ -146,8 +146,8 @@ end
 ----------------
 function Game:render()
    sdl.RenderClear(self.renderer)
-   local p = { x = self.player.pos.x - self.camera.x
-             , y = self.player.pos.y - self.camera.y}
+  -- Actual drawing here
+  local p = { x = self.player.pos.x - self.camera.x , y = self.player.pos.y - self.camera.y}
    renderTee(self.renderer, self.player.texture, p)
    sdl.RenderPresent(self.renderer)
 end
@@ -164,9 +164,10 @@ local main = function()
   local imgFlags = img.INIT_PNG
   if utils.sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
 
-  local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
+  local srcName = string.sub(arg[0],1,-5)
+  local window = sdl.CreateWindow(string.format("%s:  [ %s ]","Our own 2D platformer written in LuaJIT",srcName),
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
-      1280, 720, sdl.WINDOW_SHOWN)
+      windowSize.x, windowSize.y, sdl.WINDOW_SHOWN)
   if utils.sdlFailIf(0 ~= window,"Window could not be created") then os.exit(1) end
 
   local renderer = sdl.CreateRenderer(window,-1,

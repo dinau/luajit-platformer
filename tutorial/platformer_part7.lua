@@ -88,20 +88,19 @@ end
 ------------------
 --- restartPlayer
 ------------------
-function Player:restartPlayer()
+local restartPlayer = function()
   return
     {x = 170, y = 500},  -- pos
     {x = 0  , y = 0},    -- vel
-    -1, -- begin
-    -1  -- finish
+   {begin = -1, finish = -1}
 end
 
 --------------
 --- newTime     -- Time type
 --------------
-function Time.newTime()
+function newTime()
   return {
-    begin   =  0,
+    begin   = -1,
     finish  = -1,
     best    = -1
   }
@@ -110,14 +109,13 @@ end
 --------------
 --- newPlayer   -- Player type
 --------------
-function Player.newPlayer(texture)
-  local ps, vl, begin, finish = Player.restartPlayer()
+function newPlayer(texture)
+  local pos, vel = restartPlayer()
   return {
     texture = texture,
-    time    = Time.newTime(),
-    restartPlayer = Player.restartPlayer,
-    pos = ps,
-    vel = vl
+    pos     = pos,
+    vel     = vel,
+    time    = newTime()
   }
 end
 
@@ -155,7 +153,7 @@ function Game.newGame(renderer)
   return {
     renderer    = renderer,
     inputs      = {false,false,false, false,false,false},
-    player      = Player.newPlayer(img.LoadTexture(renderer,"player.png")),
+    player      = newPlayer(img.LoadTexture(renderer,"tika.png")),
     map         = Map.newMap(img.LoadTexture(renderer,"grass.png"),"default.map"),
     camera      = ffi.new("SDL_Point",{0,0}),
     -- method
@@ -207,8 +205,8 @@ end
 ----------------
 function Game:render()
    sdl.RenderClear(self.renderer)
-   local p = { x = self.player.pos.x - self.camera.x
-             , y = self.player.pos.y - self.camera.y}
+  -- Actual drawing here
+  local p = { x = self.player.pos.x - self.camera.x , y = self.player.pos.y - self.camera.y}
    renderTee(self.renderer, self.player.texture, p)
    renderMap(self.renderer, self.map, self.camera)
    sdl.RenderPresent(self.renderer)
@@ -228,7 +226,7 @@ end
 --- getTileSub
 ---------------
 function getTileSub(map, pos)
-  getTile(map,math.floor(pos.x), math.floor(pos.y))
+  return getTile(map,math.floor(pos.x), math.floor(pos.y))
 end
 
 ---------------
@@ -326,8 +324,9 @@ end
 -----------------
 function Game:physics()
   if self.inputs[Input.restart] then
-    self.player.pos, self.player.vel,
-    self.player.time.begin, self.player.time.finish = self.player:restartPlayer()
+    self.player.pos, self.player.vel, time = restartPlayer()
+    self.player.time.begin = time.begin
+    self.player.time.finish = time.finish
   end
 
   local ground = onGround(self.map, self.player.pos, playerSize)
@@ -373,29 +372,26 @@ end
 --- formatTime
 ---------------
 function formatTime(ticks)
-  local mins  = math.ceil(math.ceil(ticks / 50) / 60)
+  local mins  = math.floor(math.floor(ticks / 50) / 60)
   local secs  = math.ceil(ticks / 50) % 60
   local cents = math.ceil(ticks % 50) * 2
-  return string.format("mins:%02d:secs:%02d}:cents:%02d",min,secs,cents)
+  return string.format("%02d:%02d:%02d",mins,secs,cents)
 end
 
 ----------
 --- logic
 ----------
 function Game:logic(tick)
-  -- template time: untyped = game.player.time
   local tile =  getTileSub(self.map, self.player.pos)
   if tile == start then
-    time.begin = tick
+    self.player.time.begin = tick
   elseif tile == finish then
     if self.player.time.begin >= 0 then
       self.player.time.finish = tick - self.player.time.begin
       self.player.time.begin = -1
-      if (self.player.time.best < 0) or
-         (self.player.time.finish < self.player.time.best) then
+      if self.player.time.best < 0 or self.player.time.finish < self.player.time.best then
         self.player.time.best = self.player.time.finish
       end
-      print("Finished in ", formatTime(self.player.time.finish))
     end
   end
 end
@@ -412,7 +408,8 @@ local main = function()
   local imgFlags = img.INIT_PNG
   if utils.sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
 
-  local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
+  local srcName = string.sub(arg[0],1,-5)
+  local window = sdl.CreateWindow(string.format("%s:  [ %s ]","Our own 2D platformer written in LuaJIT",srcName),
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
       windowSize.x, windowSize.y, sdl.WINDOW_SHOWN)
   if utils.sdlFailIf(0 ~= window,"Window could not be created") then os.exit(1) end

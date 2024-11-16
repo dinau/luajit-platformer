@@ -17,14 +17,14 @@
 
 Writing a 2D Platform Game in LuaJIT with SDL2.
 
-This repository has been inherited from  
-- [nim-platformer](https://github.com/def-/nim-platformer) project.
-   - Document  
-   English:  https://hookrace.net/blog/writing-a-2d-platform-game-in-nim-with-sdl2/  
-   Japanese: https://postd.cc/writing-a-2d-platform-game-in-nim-with-sdl2/  
+This repository has been inherited from [nim-platformer](https://github.com/def-/nim-platformer) project.
+- Document  
+English:  https://hookrace.net/blog/writing-a-2d-platform-game-in-nim-with-sdl2/  
+Japanese: https://postd.cc/writing-a-2d-platform-game-in-nim-with-sdl2/  
 
+Skin database [https://ddnet.org/skins](https://ddnet.org/skins)
 
-![alt](img/t4.png)
+![alt](img/game.png)
 
 #### Support OS
 
@@ -36,11 +36,14 @@ Windows10 or later
 #### Download
 
 ---
-- Windows 64bit version WIP  
-2024/11: [luajit-platformer-0.9.0.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.9.0.zip)
 
-- Last Windows 32bit version  
-2024/11: [luajit-platformer-0.8.4.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.8.4.zip)
+- Latest for Windows 32bit / 64bit common  
+   2024/11: [luajit-platformer-0.8.5.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.8.5.zip)  
+   - old version  
+   2024/11: [luajit-platformer-0.8.4.zip](https://bitbucket.org/dinau/storage/downloads/luajit-platformer-0.8.4.zip)
+
+~~- Windows 64bit version in progress   
+2024/11: luajit-platformer-0.9.0.zip~~
 
 #### Run Tutorials
 
@@ -50,7 +53,7 @@ Windows10 or later
 1. On MS-DOS command line, 
 
    ```sh
-   cd luajit-paltformer-0.9.0 
+   cd luajit-paltformer-0.8.5 
    cd tutorial
    platformer_part5.bat      # For instance execute platformer_part5.lua
    ```
@@ -74,9 +77,7 @@ Windows10 or later
 [platformer_part6.lua](tutorial/platformer_part6.lua)  
 [platformer_part7.lua](tutorial/platformer_part7.lua)  
 [platformer_part8.lua](tutorial/platformer_part8.lua)  
-
-- In progress TODO  
-platformer_part9.lua
+platformer_part9.lua - In progress TODO  
 
 
 #### Install and run from sources
@@ -93,14 +94,12 @@ cd tutorial
 
 ---
 
-- SDL2.dll  
-https://github.com/libsdl-org/SDL/releases/tag/release-2.28.5
-- SDL2_image.dll  
-https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.3
-- SDL2_ttf.dll  
-https://github.com/libsdl-org/SDL_ttf/releases/tag/release-2.20.2
-- LuaJIT-SDL2  
-https://github.com/sonoro1234/LuaJIT-SDL2
+| Dll            | URL                                                                |
+|:---------------|:-------------------------------------------------------------------|
+| SDL2.dll       | https://github.com/libsdl-org/SDL/releases/tag/release-2.28.5      |
+| SDL2_image.dll | https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.3 |
+| SDL2_ttf.dll   | https://github.com/libsdl-org/SDL_ttf/releases/tag/release-2.20.2  |
+| LuaJIT-SDL2    | https://github.com/sonoro1234/LuaJIT-SDL2                          |
 
 
 #### Tools version

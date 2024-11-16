@@ -20,7 +20,7 @@ local Time      = {}
 local Game      = {}
 --      { renderer = {},
 --       inputs   = {false,false,false, false,false,false},
---       player   = {texture = nil, pos = {x=0,y=0}, vel = {x=0,y=0} },-- Player type
+--       player   = {texture = nil, pos = {x=0,y=0}, vel = {x=0,y=0} time = {begin, finish, best} },-- Player type
 --       map      = {texture = nil,width = 0,height = 0,tiles = {}},
 --       camera   = ffi.new("SDL_Point",{0,0})
 --     }
@@ -115,20 +115,19 @@ end
 ------------------
 --- restartPlayer
 ------------------
-function Player:restartPlayer()
+local restartPlayer = function()
   return
-    {x = 170, y = 500},  -- pos
-    {x = 0  , y = 0},    -- vel
-    -1, -- begin
-    -1  -- finish
+   {x = 170, y = 500},  -- pos
+   {x = 0  , y = 0},    -- vel
+   {begin = -1, finish = -1}
 end
 
 --------------
 --- newTime     -- Time type
 --------------
-function Time.newTime()
+function newTime()
   return {
-    begin   =  0,
+    begin   = -1,
     finish  = -1,
     best    = -1
   }
@@ -137,14 +136,13 @@ end
 --------------
 --- newPlayer   -- Player type
 --------------
-function Player.newPlayer(texture)
-  local ps, vl, begin, finish = Player.restartPlayer()
+function newPlayer(texture)
+  local pos, vel = restartPlayer()
   return {
     texture = texture,
-    time    = Time.newTime(),
-    restartPlayer = Player.restartPlayer,
-    pos = ps,
-    vel = vl
+    pos     = pos,
+    vel     = vel,
+    time    = newTime()
   }
 end
 
@@ -152,7 +150,7 @@ end
 --- newMap     -- : Map type
 ------------
 function Map.newMap(texture,file)
-  local result = {tiles = {}, texture = texture, width = 0,height = 0} -- Map type
+  local result = {tiles = {}, texture = texture, width = 0, height = 0} -- Map type
 
   for line in io.lines(file) do
     local width = 0
@@ -185,7 +183,7 @@ function Game.newGame(renderer)
   return {
     renderer    = renderer,
     inputs      = {false,false,false, false,false,false},
-    player      = Player.newPlayer(img.LoadTexture(renderer,"player.png")),
+    player      = newPlayer(img.LoadTexture(renderer,"power_beam.png")),
     map         = Map.newMap(img.LoadTexture(renderer,"grass.png"),"default.map"),
     camera      = ffi.new("SDL_Point",{0,0}),
     font        = f,
@@ -204,17 +202,17 @@ end
 -- toInput
 -----------
 local toInput = function (key)
-  if     key == sdl.SCANCODE_A or key == sdl.SCANCODE_H or key == sdl.SCANCODE_LEFT then
-    return Input.left
-  elseif key == sdl.SCANCODE_D or key == sdl.SCANCODE_L or key == sdl.SCANCODE_RIGHT then
-    return Input.right
-  elseif key == sdl.SCANCODE_SPACE or key == sdl.SCANCODE_UP  then
-    return Input.jump
-  elseif key == sdl.SCANCODE_J     then return Input.jump
-  elseif key == sdl.SCANCODE_K     then return Input.jump
-  elseif key == sdl.SCANCODE_R     then return Input.restart
-  elseif key == sdl.SCANCODE_Q     then return Input.quit
-  else return Input.none end
+  local write = function(str)
+    -- dwrite(str)
+  end
+  write("\n")
+  if     key == sdl.SCANCODE_A or key == sdl.SCANCODE_H or key == sdl.SCANCODE_LEFT then write("LEFT: ") return Input.left
+  elseif key == sdl.SCANCODE_D or key == sdl.SCANCODE_L or key == sdl.SCANCODE_RIGHT then write("RIGHT: ") return Input.right
+  elseif key == sdl.SCANCODE_UP or key == sdl.SCANCODE_SPACE or key == sdl.SCANCODE_J or key == sdl.SCANCODE_K then write("JUMP: ") return Input.jump
+  elseif key == sdl.SCANCODE_R then write("Rstart: ") return Input.restart
+  elseif key == sdl.SCANCODE_Q or key == sdl.SCANCODE_ESCAPE then write("Quit: ") return Input.quit
+  else write("None: ") return Input.none
+  end
 end
 
 --------------------
@@ -241,22 +239,41 @@ function Game:render(tick)
   -- Draw over all drawings of the last frame with the default color
   sdl.RenderClear(self.renderer)
   -- Actual drawing here
-  local p = { x = self.player.pos.x - self.camera.x
-            , y = self.player.pos.y - self.camera.y}
+  local p = { x = self.player.pos.x - self.camera.x , y = self.player.pos.y - self.camera.y}
   renderTee(self.renderer, self.player.texture, p)
   renderMap(self.renderer, self.map, self.camera)
 
   local time = self.player.time
   local white = ffi.new("SDL_Color",{0xff, 0xff, 0xff, 0xff})
+  local green = ffi.new("SDL_Color",{0x00, 0xc0, 0x00, 0xff})
+  local red   = ffi.new("SDL_Color",{0xb0, 0x00, 0x00, 0xff})
+  local blue  = ffi.new("SDL_Color",{0x00, 0xff, 0xff, 0xff})
   if time.begin >= 0 then
     self:renderText(formatTime(tick - time.begin), 50, 100, white)
   elseif time.finish >= 0 then
     self:renderText("Finished in: " .. formatTime(time.finish), 50, 100, white)
   end
   if time.best >= 0 then
-    self:renderText("Best time: " .. formatTime(time.best), 50, 150, white)
+    self:renderText("Best time  : " .. formatTime(time.best), 50, 150, green)
   end
-
+  if time.begin < 0 then
+    local base = 230
+    local colm = 30
+    self:renderText("Jump   : Spase, Up, J, K",50, base+colm*1, white)
+    self:renderText("Left     : A, H, Left",50,    base+colm*2, white)
+    self:renderText("Right   : D, L, Right",50,    base+colm*3, white)
+    self:renderText("Restart: R",50,               base+colm*4, white)
+    self:renderText("Quit     : Q, Esc",50,        base+colm*5, white)
+    self:renderText(_VERSION,50,                   base+colm*7, white)
+    local pVer = ffi.new("SDL_version[1]")
+    sdl.GetVersion(pVer)
+    self:renderText("SDL2           " .. pVer[0].major .. "." .. pVer[0].minor .. "." .. pVer[0].patch, 50, base+colm*8, white)
+    pver = img.Linked_Version()
+    self:renderText("SDL_image  "     .. pver[0].major .. "." .. pver[0].minor .. "." .. pver[0].patch, 50, base+colm*9, white)
+    pver = ttf.Linked_Version()
+    self:renderText("SDL_ttf        " .. pver[0].major .. "." .. pver[0].minor .. "." .. pver[0].patch, 50, base+colm*10, white)
+    self:renderText("LuaJIT-Platformer",50,                                                                 base+colm*14, blue)
+  end
   -- Show the result on screen
   sdl.RenderPresent(self.renderer)
 end
@@ -275,7 +292,7 @@ end
 --- getTileSub
 ---------------
 function getTileSub(map, pos)
-  getTile(map,math.floor(pos.x), math.floor(pos.y))
+  return getTile(map,math.floor(pos.x), math.floor(pos.y))
 end
 
 ---------------
@@ -297,7 +314,7 @@ end
 --- onGround
 -------------
 function onGround(map, pos, size)
-  local sz = { x = size.x * 0.5, y = size.y * 0.5}
+  local sz  = {x = size.x * 0.5, y = size.y * 0.5}
   local pt1 = {x = pos.x - sz.x, y = pos.y + sz.y + 1}
   local pt2 = {x = pos.x + sz.x, y = pos.y + sz.y + 1}
   return isSolid(map, pt1) or isSolid(map, pt2)
@@ -373,8 +390,9 @@ end
 -----------------
 function Game:physics()
   if self.inputs[Input.restart] then
-    self.player.pos, self.player.vel,
-    self.player.time.begin, self.player.time.finish = self.player:restartPlayer()
+    self.player.pos, self.player.vel, time = restartPlayer()
+    self.player.time.begin = time.begin
+    self.player.time.finish = time.finish
   end
 
   local ground = onGround(self.map, self.player.pos, playerSize)
@@ -430,19 +448,16 @@ end
 --- logic
 ----------
 function Game:logic(tick)
-  -- template time: untyped = game.player.time
   local tile =  getTileSub(self.map, self.player.pos)
   if tile == start then
-    time.begin = tick
+    self.player.time.begin = tick
   elseif tile == finish then
     if self.player.time.begin >= 0 then
       self.player.time.finish = tick - self.player.time.begin
       self.player.time.begin = -1
-      if (self.player.time.best < 0) or
-         (self.player.time.finish < self.player.time.best) then
+      if self.player.time.best < 0 or self.player.time.finish < self.player.time.best then
         self.player.time.best = self.player.time.finish
       end
-      print("Finished in ", formatTime(self.player.time.finish))
     end
   end
 end
@@ -460,7 +475,8 @@ local main = function()
   if utils.sdlFailIf(0 ~= img.Init(imgFlags), "SDL2 Image initialization failed") then os.exit(1) end
   if utils.sdlFailIf(0 == ttf.Init(), "SDL2_tff font driver initialization failed") then os.exit(1) end
 
-  local window = sdl.CreateWindow("Our own 2D platformer written in Luajit",
+  local srcName = string.sub(arg[0],1,-5)
+  local window = sdl.CreateWindow(string.format("%s:  [ %s ]","Our own 2D platformer written in LuaJIT",srcName),
       sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
       windowSize.x, windowSize.y, sdl.WINDOW_SHOWN)
   if utils.sdlFailIf(0 ~= window,"Window could not be created") then os.exit(1) end
