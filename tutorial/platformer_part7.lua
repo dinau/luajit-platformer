@@ -33,6 +33,10 @@ local air    =   0
 local start  =  78
 local finish = 110
 
+--- Camera moving attribute
+local FluidCamera = true
+local InnerCamera = false
+
 --------------
 --- renderTee
 --------------
@@ -356,10 +360,10 @@ end
 ---------------
 function Game:moveCamera()
   local halfWin = windowSize.x / 2
-  if fluidCamera then
+  if FluidCamera then
     local dist = self.camera.x - self.player.pos.x + halfWin
     self.camera.x = self.camera.x - 0.05 * dist
-  elseif innerCamera then
+  elseif InnerCamera then
     local leftArea  = self.player.pos.x - halfWin - 100
     local rightArea = self.player.pos.x - halfWin + 100
     self.camera.x = clamp(self.camera.x, leftArea, rightArea)
