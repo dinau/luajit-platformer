@@ -8,6 +8,8 @@
   - [Install and run from sources](#install-and-run-from-sources)
   - [Reference](#reference)
   - [Tools version](#tools-version)
+  - [SDL Game tutorial platfromer project](#sdl-game-tutorial-platfromer-project)
+  - [Other project](#other-project)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -24,7 +26,7 @@ Japanese: https://postd.cc/writing-a-2d-platform-game-in-nim-with-sdl2/
 
 Skin database [https://ddnet.org/skins](https://ddnet.org/skins)
 
-![alt](img/game.png)
+![alt](https://github.com/dinau/luajit-platformer/blob/main/img/platformer-luajit-sdl2.gif)
 
 #### Support OS
 
@@ -117,7 +119,7 @@ cd tutorial
 
 ---
 
-![ald](https://github.com/dinau/nelua-platformer/raw/main/img/game.png)
+![ald](https://github.com/dinau/nelua-platformer/raw/main/img/platformer-nelua-sdl2.gif)
 
 | Language             |          | Project                                                            |
 | -------------------: | :---:    | :----------------------------------------------------------------: |
